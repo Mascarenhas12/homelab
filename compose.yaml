@@ -13,7 +13,7 @@ services:
       - TZ=Etc/UTC
       - LOG_CONFS=true #optional
     volumes:
-      - ./config:/config/wg_confs/wg0.conf
+      - ./wg-configs:/config/wg_confs
         #- /lib/modules:/lib/modules
     ports:
       - 51820:51820/udp

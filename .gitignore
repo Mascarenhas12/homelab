@@ -1,4 +1,5 @@
-config
+wg-configs/
+*.conf
 *.json
 .env
 env
