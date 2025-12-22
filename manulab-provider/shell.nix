@@ -9,6 +9,8 @@ let
     neovim
     lazygit
     go-task
+    which
+    tree
   ];
 
 in

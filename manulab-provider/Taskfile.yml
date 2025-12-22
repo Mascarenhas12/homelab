@@ -1,0 +1,14 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  run-server:
+    desc: |
+      Cargo builds and runs grpc server
+    summary: |
+      Startup localhost server that can be accessed with
+      grpcurl -plaintext -import-path . -proto provider.proto '[::1]:50051' manulab.HomelabProvider/GetPluginInfo
+    cmds:
+      - export PROTOC_INCLUDE=${PROTOC%/bin/protoc}/include
+      - cargo run --bin manulab-provider-server
