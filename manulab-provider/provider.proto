@@ -1,0 +1,39 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+package manulab;
+
+
+service HomelabProvider {
+  rpc GetPluginInfo(google.protobuf.Empty) returns (PluginInfo);
+  rpc GetSchema(GetSchemaRequest) returns (GetSchemaResponse);
+  
+  // TODO: Implement
+  rpc Configure(google.protobuf.Empty) returns (google.protobuf.Empty);
+  // TODO: Implement
+  rpc Check(google.protobuf.Empty) returns (google.protobuf.Empty);
+  // TODO: Implement
+  rpc Diff(google.protobuf.Empty) returns (google.protobuf.Empty);
+  // TODO: Implement
+  rpc Create(google.protobuf.Empty) returns (google.protobuf.Empty);
+  // TODO: Implement
+  rpc Read(google.protobuf.Empty) returns (google.protobuf.Empty);
+  // TODO: Implement
+  rpc Update(google.protobuf.Empty) returns (google.protobuf.Empty);
+  // TODO: Implement
+  rpc Delete(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+
+message PluginInfo {
+  string version = 1;
+}
+
+message GetSchemaRequest {
+  int32 version = 1;
+  string subpackage_name = 2;
+  string subpackage_versopm = 3;
+}
+
+message GetSchemaResponse {
+  // JSON-encoded schema as string
+  string schema = 1;
+}

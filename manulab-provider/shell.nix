@@ -5,7 +5,7 @@ let
     rustc
     cargo
     pulumi
-    grpc-tools
+    protobuf
     neovim
     lazygit
     go-task
@@ -20,6 +20,9 @@ pkgs.mkShellNoCC {
     for the HomeLab using Rust.
   '';
 
+  # TODO: fix this in shellHooks as complains about %
+  # export PROTOC_INCLUDE=${PROTOC%/bin/protoc}/include
+
   shellHook = ''
     echo
     echo "$GREETING"
@@ -28,6 +31,8 @@ pkgs.mkShellNoCC {
     for pkg in ${pkgs.lib.concatStringsSep " " (map (p: p.pname or p.name) packageList)}; do
       echo "  - $pkg"
     done
+
+    export PROTOC=$(which protoc)
 
     echo "Current directory structure:"
     tree -L 2
