@@ -1,0 +1,8 @@
+name: lab-stacks
+runtime:
+  name: python
+  options:
+    toolchain: uv
+    typechecker: mypy
+    virtualenv: .venv 
+description: Create resources in Homelab

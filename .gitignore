@@ -4,3 +4,7 @@
 env
 .vscode
 manulab-provider/target
+*.lock
+venv
+__pycache__
+Pulumi.tst.yaml

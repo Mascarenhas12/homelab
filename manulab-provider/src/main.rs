@@ -1,7 +1,7 @@
 use std::env;
 use tonic::{transport::Server, Request, Response, Status};
 
-use manulab_pulumi::homelab_provider_server::{HomelabProvider, HomelabProviderServer};
+use manulab_pulumi::resource_provider_server::{ResourceProvider, ResourceProviderServer};
 use manulab_pulumi::{PluginInfo, GetSchemaRequest, GetSchemaResponse};
 
 pub mod manulab_pulumi {
@@ -13,7 +13,7 @@ pub mod manulab_pulumi {
 pub struct ManulabProvider {}
 
 #[tonic::async_trait]
-impl HomelabProvider for ManulabProvider {
+impl ResourceProvider for ManulabProvider {
     async fn get_plugin_info(
         &self,
         request: Request<()>, // Accept empty request
@@ -94,7 +94,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     println!("Running on port {}...", port);
     Server::builder()
-        .add_service(HomelabProviderServer::new(manulab))
+        .add_service(ResourceProviderServer::new(manulab))
         .serve(addr)
         .await?;
 

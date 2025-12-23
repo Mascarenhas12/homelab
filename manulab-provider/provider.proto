@@ -3,7 +3,7 @@ import "google/protobuf/empty.proto";
 package manulab;
 
 
-service HomelabProvider {
+service ResourceProvider {
   rpc GetPluginInfo(google.protobuf.Empty) returns (PluginInfo);
   rpc GetSchema(GetSchemaRequest) returns (GetSchemaResponse);
   
