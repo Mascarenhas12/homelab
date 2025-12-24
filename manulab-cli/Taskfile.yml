@@ -1,0 +1,21 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  run-client:
+    desc: |
+      Cargo builds the client and runs test against server
+    summary: |
+      Runs a demo of the client to make sure connectivity
+      proto generation is running correctly
+    cmds:
+      - cargo run --bin manulab-cli-client
+  compile-client:
+    desc: |
+      Cargo builds the client into binary and places on PATH
+    summary: |
+      Creates a rust cli that can make GRPC requests
+      to server to create infrastructure on homelab
+    cmds:
+      - cargo build .

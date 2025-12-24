@@ -4,7 +4,6 @@ let
   packageList = with pkgs; [
     rustc
     cargo
-    pulumi
     protobuf
     neovim
     lazygit

@@ -2,13 +2,14 @@ let
   nixpkgs = fetchTarball "https://github.com/NixOS/nixpkgs/tarball/nixos-25.11";
   pkgs = import nixpkgs { config = {}; overlays = []; };
   packageList = with pkgs; [
-    pulumi
-    pulumiPackages.pulumi-python
+    rustc
+    cargo
+    protobuf
     neovim
     lazygit
     go-task
+    which
     tree
-    uv
   ];
 
 in
@@ -16,8 +17,8 @@ in
 pkgs.mkShellNoCC {
   packages = packageList;
   GREETING = ''
-    This environment is set up for developing a Pulumi Stacks
-    for the HomeLab using Python.
+    This environment is set up for developing a CLI
+    for the HomeLab using Rust.
   '';
 
   # TODO: fix this in shellHooks as complains about %
@@ -31,11 +32,8 @@ pkgs.mkShellNoCC {
     for pkg in ${pkgs.lib.concatStringsSep " " (map (p: p.pname or p.name) packageList)}; do
       echo "  - $pkg"
     done
-    
-    echo "Installing latest python..."
-    uv python install
-    uv add mypy
-    pulumi install
+
+    export PROTOC=$(which protoc)
 
     echo "Current directory structure:"
     tree -L 2

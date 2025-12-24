@@ -3,7 +3,7 @@
 .env
 env
 .vscode
-manulab-provider/target
+*/target
 *.lock
 venv
 __pycache__
