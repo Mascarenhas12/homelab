@@ -8,6 +8,9 @@ name = "manulab-provider-server"
 path = "src/main.rs"
 
 [dependencies]
+opentelemetry = "0.31.0"
+opentelemetry-stdout = "0.31.0"
+opentelemetry_sdk = "0.31.0"
 prost = "0.14.1"
 tokio = { version = "1.48", features = ["macros", "rt-multi-thread"] }
 tonic = "0.14.2"
