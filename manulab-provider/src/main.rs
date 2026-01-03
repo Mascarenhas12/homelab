@@ -2,6 +2,7 @@ use std::env;
 use tonic::{transport::Server, Request, Response, Status};
 
 use opentelemetry::{global, KeyValue};
+use opentelemetry::metrics::{Meter, Counter};
 use opentelemetry_sdk::metrics::SdkMeterProvider;
 use opentelemetry_sdk::Resource;
 
@@ -27,8 +28,28 @@ pub mod manulab_pulumi {
 }
 
 // This is a rust macro 
-#[derive(Debug, Default)]
-pub struct ManulabProvider {}
+#[derive(Debug)]
+pub struct ManulabProvider {
+    meter: Meter,
+    counters: Vec<Counter<u64>>,
+}
+
+impl ManulabProvider {
+    pub fn new() -> ManulabProvider {
+        let meter = global::meter("get-plugin-info");
+        let counters = Vec::with_capacity(1);
+
+        ManulabProvider{
+            meter: meter,
+            counters: counters,
+        }
+    }
+
+    pub fn add_counter(&mut self, count: Counter<u64>) {
+        self.counters.push(count);
+    }
+}
+
 
 #[tonic::async_trait]
 impl ResourceProvider for ManulabProvider {
@@ -36,12 +57,8 @@ impl ResourceProvider for ManulabProvider {
         &self,
         request: Request<()>, // Accept empty request
         ) -> Result<Response<PluginInfo>, Status> { // Return instance of PluginInfo message
-            // TODO probably to move inside ManulabProvider struct
-            // Then only counter.add used here
-            let meter = global::meter("get-plugin-info");
-            let counter = meter.u64_counter("get-plugin-counter").build();
 
-            counter.add(
+            self.counters[0].add(
                 1,
                 &[
                     KeyValue::new("plugin_version","rc0-v0.0.1"),
@@ -119,8 +136,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // TODO: error handle as logs
     let addr = format!("[::1]:{}", port).parse()?;
     
-    let manulab = ManulabProvider::default();
     let meter_provider = init_meter_provider();
+    let mut manulab = ManulabProvider::new();
+    let count = manulab.meter.u64_counter("get-plugin-info-count").build();
+    manulab.add_counter(count);
 
     println!("Running on port {}...", port);
     Server::builder()
