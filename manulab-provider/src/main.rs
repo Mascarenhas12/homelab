@@ -6,6 +6,9 @@ use opentelemetry::metrics::{Meter, Counter};
 use opentelemetry_sdk::metrics::SdkMeterProvider;
 use opentelemetry_sdk::Resource;
 
+use tracing::{instrument, event, Level};
+use tracing_subscriber::fmt;
+
 use manulab_pulumi::resource_provider_server::{ResourceProvider, ResourceProviderServer};
 use manulab_pulumi::{PluginInfo, GetSchemaRequest, GetSchemaResponse};
 
@@ -39,6 +42,17 @@ impl ManulabProvider {
         let meter = global::meter("get-plugin-info");
         let counters = Vec::with_capacity(1);
 
+        let format = fmt::format()
+            .with_level(true)
+            .with_target(false)
+            .with_thread_ids(true)
+            .with_thread_names(true)
+            .pretty();
+
+        let sub = tracing_subscriber::fmt()
+            .event_format(format)
+            .init();
+
         ManulabProvider{
             meter: meter,
             counters: counters,
@@ -53,6 +67,7 @@ impl ManulabProvider {
 
 #[tonic::async_trait]
 impl ResourceProvider for ManulabProvider {
+    #[instrument]
     async fn get_plugin_info(
         &self,
         request: Request<()>, // Accept empty request
@@ -64,7 +79,7 @@ impl ResourceProvider for ManulabProvider {
                     KeyValue::new("plugin_version","rc0-v0.0.1"),
                 ]
             );
-            println!("Got a request for PluginInfo from: {:#?}", request.remote_addr());
+            event!(Level::INFO, "Got a request for PluginInfo from {:#?}", request.remote_addr());
 
             let reply = PluginInfo {
                 version: "rc0-v0.0.1".to_string(),
@@ -141,7 +156,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let count = manulab.meter.u64_counter("get-plugin-info-count").build();
     manulab.add_counter(count);
 
-    println!("Running on port {}...", port);
+    event!(Level::DEBUG, "Running on port: {}", port);
     Server::builder()
         .add_service(ResourceProviderServer::new(manulab))
         .serve(addr)
