@@ -10,7 +10,7 @@ tasks:
       Runs a demo of the client to make sure connectivity
       proto generation is running correctly
     cmds:
-      - env RUST_LOG=info cargo run --bin manulab-cli-client
+      - env RUST_LOG=info cargo run --bin manulab-cli-client shipyard
   compile-client:
     desc: |
       Cargo builds the client into binary and places on PATH
