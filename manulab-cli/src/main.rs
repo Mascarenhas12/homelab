@@ -1,5 +1,5 @@
-use clap::{Parser, Subcommand};
-use log::{info, warn};
+use clap::{Args, Parser, Subcommand};
+use log::{info, warn, error};
 use manulab::resource_provider_client::ResourceProviderClient;
 
 
@@ -34,52 +34,64 @@ enum ManifestFormat {
     Yaml,
     Table,
 }
+*/
 
-#[derive(Debug, Subcommand, Clone)]
-enum ShipYardCommand {
+#[derive(Debug, Subcommand)]
+enum ShipyardSubCommand {
     Install{
         #[arg(short, long)]
         name: String,
         #[arg(short, long, default_value_t = true)]
         local: bool,
-        #[arg(short, long, default_value_t = "latest")]
+        #[arg(short, long)]
         version: String,
     },
     Manifest{
         #[arg(short, long)]
         name: String,
-        #[arg(short, long, default_value_t = ManifestFormat::Text)]
-        format: ManifestFormat,
+        #[arg(short, long)]
+        format: String,
     },
     Remove{
         #[arg(short, long)]
         name: String,
     },
 }
-*/
+
+
+#[derive(Args, Debug)]
+struct ShipyardCommands {
+    #[clap(subcommand)]
+    command: ShipyardSubCommand,
+} 
 
 #[derive(Debug, Subcommand)]
 enum CaravelaCommand {
-    Shipyard,
+    Shipyard(ShipyardCommands),
     Sail,
     Wreck,
     Spot,
 }
 
 #[derive(Parser, Debug)]
+#[command(propagate_version = true)]
 #[command(name = "caravela", version, about, long_about = "Rust client to interact with Manulab GRPC server")]
 pub struct Cli {
     #[clap(subcommand)]
     command: CaravelaCommand,
 }
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>>{
+fn main() -> Result<(), Box<dyn std::error::Error>>{
   env_logger::init();
   let cli = Cli::parse();
   match &cli.command {
-      CaravelaCommand::Shipyard => {
+      CaravelaCommand::Shipyard(sub) => {
           info!("Received command shipyard!");
+          match &sub.command {
+              ShipyardSubCommand::Install {..} => info!("Received subcommand Install"),
+              ShipyardSubCommand::Manifest {..} => return get_plugin_info(),
+              ShipyardSubCommand::Remove {..} => error!("Cannot remove only shipyard"),
+          }
       },
       CaravelaCommand::Sail => {
           info!("Received command sail!");
