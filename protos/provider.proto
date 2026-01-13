@@ -1,6 +1,8 @@
 syntax = "proto3";
 import "google/protobuf/empty.proto";
+import "types.proto";
 package manulab;
+
 
 
 service ResourceProvider {
@@ -28,12 +30,12 @@ message PluginInfo {
 }
 
 message GetSchemaRequest {
-  int32 version = 1;
-  string subpackage_name = 2;
-  string subpackage_versopm = 3;
+  Category category = 1;
+  Format format = 2;
+  map<string, string> selector = 3;
 }
 
 message GetSchemaResponse {
-  // JSON-encoded schema as string
-  string schema = 1;
+  repeated string schema = 1;
+  repeated Resource completeSchema = 2;
 }
