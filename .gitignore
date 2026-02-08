@@ -7,4 +7,4 @@ env
 *.lock
 venv
 __pycache__
-Pulumi.tst.yaml
+*pass*

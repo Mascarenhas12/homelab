@@ -2,8 +2,8 @@ import Config
 
 # Configure your database
 config :higia, Higia.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: System.get_env("POSTGRES_USERNAME", "admin"),
+  password: System.fetch_env!("POSTGRES_PASSWORD"),
   hostname: "localhost",
   database: "higia_dev",
   stacktrace: true,

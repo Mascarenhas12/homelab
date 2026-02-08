@@ -29,7 +29,8 @@ pkgs.mkShellNoCC {
       echo "  - $pkg"
     done
 
-    mix archive.install hex phx_new
+    mix archive.install hex phx_new -y
+    POSTGRES_PASSWORD=$(cat ./psql-pass.txt) && export POSTGRES_PASSWORD
 
     echo "Current directory structure:"
     tree -L 2
