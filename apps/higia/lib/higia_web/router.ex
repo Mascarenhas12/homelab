@@ -18,6 +18,8 @@ defmodule HigiaWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/healthcenters", HealthcenterController, :index
+    get "/healthcenters/:center_name", HealthcenterController, :show
   end
 
   # Other scopes may use custom stacks.

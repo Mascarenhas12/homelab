@@ -2,6 +2,7 @@ let
   nixpkgs = fetchTarball "https://github.com/NixOS/nixpkgs/tarball/nixos-25.11";
   pkgs = import nixpkgs { config = {}; overlays = []; };
   packageList = with pkgs; [
+    inotify-tools
     elixir_1_19
     neovim
     lazygit
@@ -29,7 +30,7 @@ pkgs.mkShellNoCC {
       echo "  - $pkg"
     done
 
-    mix archive.install hex phx_new -y
+    mix archive.install hex phx_new --force
     POSTGRES_PASSWORD=$(cat ./psql-pass.txt) && export POSTGRES_PASSWORD
 
     echo "Current directory structure:"

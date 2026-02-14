@@ -1,0 +1,23 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  db-dev:
+    internal: true
+    desc: |
+      Brings up postgres DB for Dev
+    summary: |
+      Runs docker compose up for PostgresDB for dev in daemon mode
+    cmds:
+      - docker compose up -d
+  run-dev:
+    failfast: true
+    deps:
+      - db-dev
+    desc: |
+      Mix run phoenix app in Dev mode
+    summary: |
+      Starts up phoenix server with Dev database and localhost connection
+    cmds:
+      - mix phx.server
